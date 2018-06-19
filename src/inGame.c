@@ -31,10 +31,6 @@
 #include <string.h>
 #include "lcd.h"
 
-void EXTI1_IRQHandler(void) {
-    while (readJoystick() & (0x01 << 2)) {}
-    EXTI->PR |= EXTI_PR_PR1;
-}
 
 void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialBricks_p){
     int i;

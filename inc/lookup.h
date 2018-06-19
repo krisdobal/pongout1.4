@@ -13,7 +13,6 @@
 #define SIN_SIZE 512
 
 // === LUT DECLARATIONS ===
-const signed short SIN[512];
 int32_t fix14sin(uint16_t a);
 int32_t fix14cos(uint16_t a);
 
