@@ -4,6 +4,7 @@
 #include "PhysicsEngine.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -289,7 +290,7 @@ void renderStrikers(int striker0, int striker1){
 
 void bufferToAnsi(uint8_t * buffer_p){
     uint8_t c = 0xDB; //Filled square char.
-    uint8_t * line[128]; 
+    uint8_t line[128];
 
     int i, j;
     for(i = 0; i<32; i++){

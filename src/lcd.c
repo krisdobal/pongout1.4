@@ -21,7 +21,7 @@ void lcdRenderArrow(uint8_t line, uint8_t * buffer_p){//char c, uint8_t * buffer
     }
 }
 
-void lcdRenderString(int slice, uint8_t line, uint8_t * string_p, uint8_t * buffer_p){
+void lcdRenderString(int slice, uint8_t line, char * string_p, uint8_t * buffer_p){
     int i = 0;
     int l = strlen(string_p);
     while(slice<(128-5)){
@@ -205,7 +205,7 @@ void lcdRenderGame(ball_t * balls_p, uint8_t * activeBalls_p, uint32_t * striker
     lcd_push_buffer(buffer_p);
 }
 
-void lcdRenderHelpScreen(int * buffer_p) {
+void lcdRenderHelpScreen(uint8_t * buffer_p) {
     lcdRenderString(1, 0, "Last survivor wins. If  ", buffer_p);
     lcdRenderString(1, 1, "all bricks are gone, the", buffer_p);
     lcdRenderString(1, 2, "player with the most    ", buffer_p);

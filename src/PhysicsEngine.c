@@ -270,6 +270,12 @@ uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBa
                 // Hitting bottom of brick:
                 reflect(&ball_p->ypos, (oldy>>14)<<14, &ball_p->yv);
             }
+
+            //Special brick hit?!
+            if(specialBricks_p[iy] & decoded_x){
+                newBall(ballArray_p, activeBalls_p, striker0_p);
+            }
+
             //Flip the bit
             bricks[iy] ^= decoded_x;
             // update the score of the hitting player

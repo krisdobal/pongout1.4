@@ -117,7 +117,9 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
 }
 
 void helpScreen(uint8_t * buffer_p) {
+    lcdCleanScreen(buffer_p);
     lcdRenderHelpScreen(buffer_p);
+    while((readJoystick() & 0x01 << 3)) {}
     while(!(readJoystick() & 0x01 << 3)) {}
 }
 
@@ -125,10 +127,10 @@ void endScreen(uint32_t gameStats, uint8_t * buffer_p) {
     lcdCleanScreen(buffer_p);
     lcdRenderString(20, 1, "...and the winner is:", buffer_p);
     if (gameStats & 0x02) {
-        lcdRenderString(20, 2, "Player 0", buffer_p);
+        lcdRenderString(20, 2, "Player 1", buffer_p);
     }
     else {
-        lcdRenderString(25, 2, "Player 1", buffer_p);
+        lcdRenderString(25, 2, "Player 0", buffer_p);
     }
     lcd_push_buffer(buffer_p);
     while(1){
