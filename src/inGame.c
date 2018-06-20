@@ -26,6 +26,25 @@
 #include <string.h>
 #include "lcd.h"
 
+void TIM2_IRQHandler(void) { // interrupt code
+    t1.flag = 1;
+/*
+    t1.centiseconds++;
+    if (t1.centiseconds/100 > 0) {
+        t1.seconds++;
+        t1.centiseconds %= 100;
+    }
+    if (t1.seconds/60 > 0) {
+        t1.minutes++;
+        t1.seconds %= 60;
+    }
+    if (t1.minutes/60 > 0) {
+        t1.hours++;
+        t1.minutes %= 60;
+   }
+*/
+    TIM2->SR &= ~0x0001; // Clear interrupt bit
+}
 
 void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialBricks_p){
     int i;
