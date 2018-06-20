@@ -126,7 +126,7 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
         if(renderCount > 50){//10000){
             //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
             lcdCleanScreen();
-            lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, &lives, &score); //, specialBricks
+            lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, specialBricks, &lives, &score); //, specialBricks
             //lcd_push_buffer(buffer);
             //updateRender();
             renderCount = 0;

@@ -38,7 +38,7 @@ void lcdCleanScreen(){
     lcd_push_buffer(buffer);
 }
 
-void lcdRenderBricks(uint32_t * bricks_p){
+void lcdRenderBricks(uint32_t * bricks_p, uint32_t * specialBricks_p){
     //This funciton renders all the bricks.
     // they're rendered two bricks at a time, on top of each other.
 
@@ -54,12 +54,30 @@ void lcdRenderBricks(uint32_t * bricks_p){
         //Each brick
         for(j=0; j<32; j++){
             //Finds the value to go into the postition in the array
-            uint8_t brickData = 0x00;
-            if(bricks_p[(i<<1)]   & (0x00000001<<j)) brickData += 0x0F;
-            if(bricks_p[(i<<1)+1] & (0x00000001<<j)) brickData += 0xF0;
+            uint8_t brickDataL = 0x00;
+            uint8_t brickDataR = 0x00;
 
-            buffer[(i<<7)+31+(j<<1)]   = brickData;
-            buffer[(i<<7)+31+(j<<1)+1] = brickData;
+            if(bricks_p[(i<<1)]   & (0x00000001<<j)) {
+                if(specialBricks_p[(i<<1)]) {
+                    brickDataL += 0x0A;
+                    brickDataR += 0x05;
+                } else {
+                    brickDataL += 0x0F;
+                    brickDataR += 0x0F;
+                }
+            }
+            if(bricks_p[(i<<1)+1] & (0x00000001<<j)) {
+                if(specialBricks_p[(i<<1)]) {
+                    brickDataL += 0xA0;
+                    brickDataR += 0x50;
+                } else {
+                    brickDataL += 0xF0;
+                    brickDataR += 0xF0;
+                }
+            }
+
+            buffer[(i<<7)+31+(j<<1)]   = brickDataL;
+            buffer[(i<<7)+31+(j<<1)+1] = brickDataR;
         }
 
     }
@@ -70,7 +88,6 @@ void lcdRenderBricks(uint32_t * bricks_p){
     // +1               - The other side of the rendered bricks.
 }
 
-//TODO : Actual life and score data
 void renderDecorations(uint8_t * lives_p, uint16_t * score_p){
     //Draw the border
     for(int i=0; i<128; i++){
@@ -196,10 +213,10 @@ void lcdRenderBalls(ball_t * balls_p, uint8_t * activeBalls_p){
     }
 }
 
-void lcdRenderGame(ball_t * balls_p, uint8_t * activeBalls_p, uint32_t * striker0_p, uint32_t * striker1_p, uint32_t * bricks_p, uint8_t * lives_p, uint16_t * score_p){
+void lcdRenderGame(ball_t * balls_p, uint8_t * activeBalls_p, uint32_t * striker0_p, uint32_t * striker1_p, uint32_t * bricks_p, uint32_t * specialBricks_p, uint8_t * lives_p, uint16_t * score_p){
     // Bricks rendered before decorations
     // Because bricks can overlap with the border
-    lcdRenderBricks(bricks_p);
+    lcdRenderBricks(bricks_p, specialBricks_p);
     renderDecorations(lives_p, score_p); //TODO : scores and lives
     lcdRenderStrikers(striker0_p, striker1_p);
     lcdRenderBalls(balls_p, activeBalls_p);
