@@ -1,4 +1,5 @@
 #include "30010_io.h"
+#include "inGame.h"
 
 /****************************/
 /*** USB Serial Functions ***/
@@ -106,7 +107,7 @@ void lcd_transmit_byte(uint8_t data) {
     GPIOB->ODR |=  (0x0001 << 6); // CS = 1 - End Transmission
 }
 
-void lcd_push_buffer(uint8_t* buffer)
+void lcd_push_buffer()
 {
     int i = 0;
 

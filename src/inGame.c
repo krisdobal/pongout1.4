@@ -17,17 +17,12 @@
 #include "lookup.h"
 #include "PhysicsEngine.h"
 #include "ansi.h"
-
 #include "joystick.h"
 #include "led.h"
-
 #include "potmeter.h"
-
 #include "timers.h"
-
 #include "levels.h"
 
-//#include "charset.h"
 #include <string.h>
 #include "lcd.h"
 
@@ -57,7 +52,7 @@ void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialB
     }
 }
 
-int startGame(uint8_t chosenLevel, uint8_t chosenSpeed, uint8_t * buffer_p){
+int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
     /*
     //Initializing hardware setup
                                         // To be put in main
@@ -108,7 +103,7 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed, uint8_t * buffer_p){
     // Rendering initial posittions
     hideCursor();
     //renderGame(balls, bricks, striker0, striker1);
-    lcdCleanScreen(buffer_p);
+    lcdCleanScreen();
 
     //memset(buffer,0xAA,512);
     //lcd_push_buffer(buffer);
@@ -130,8 +125,8 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed, uint8_t * buffer_p){
 
         if(renderCount > 50){//10000){
             //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
-            lcdCleanScreen(buffer_p);
-            lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, buffer_p, &lives, &score); //, specialBricks
+            lcdCleanScreen();
+            lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, &lives, &score); //, specialBricks
             //lcd_push_buffer(buffer);
             //updateRender();
             renderCount = 0;
