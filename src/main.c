@@ -4,16 +4,7 @@
 #include "inGame.h"
 #include "ansi.h"
 #include "joystick.h"
-//#include "charset.h"
-//#include <string.h>
 #include "lcd.h"
-//#include "lookup.h"
-//#include "led.h"
-//#include "potmeter.h"
-//#include "timers.h"
-//#include "levels.h"
-
-
 
 void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p);
 void startScreen();
@@ -21,8 +12,8 @@ void helpScreen();
 void endScreen(uint32_t gameStats);
 
 
-
 int main(void) {
+  
   //Initializing hardware
   init_usb_uart(921600);
   init_spi_lcd();
@@ -35,7 +26,8 @@ int main(void) {
   //Initializing game variables
   uint8_t level = 0;
   uint8_t speed = 0;
-
+  
+  //Menu options
   char * mainOption0 = "change level";
   char * mainOption1 = "change speed";
   char * mainOption2 = "help";
@@ -51,12 +43,13 @@ int main(void) {
   char * speedOption2 = "speedy gonzales";
   char * speedOption3 = "warp speed";
 
-
+  //start user interaction
   while(1) {
       //Show main menu
        uint8_t nextAction = 0;
       menu(mainOption0, mainOption1, mainOption2, mainOption3, &nextAction);
-
+      
+      //goto the wished option
       switch (nextAction) {
           case 0 :
               menu(levelOption0, levelOption1, levelOption2, levelOption3, &level);
@@ -74,12 +67,15 @@ int main(void) {
   }
 }
 
+//general menu function. Only leaves this function if the user has chosen an option.
 void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p) {
 
+    //Initialize game variables
     uint8_t pressed = 1;
     uint8_t stillDeciding = 1;
     uint8_t joystick = 0x00;
 
+    //show first screen
     lcdCleanScreen();
 
     lcdRenderString(0, 0, opt0);
@@ -89,7 +85,8 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
     lcdRenderArrow(*option_p);
     lcd_push_buffer();
     bufferToAnsi();
-
+    
+    //react to joystick movement
     while(stillDeciding) {
         joystick = readJoystick();
         if (!pressed) {
@@ -118,6 +115,7 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
     }
 }
 
+//show help screen until joystick is pressed right
 void helpScreen() {
     lcdCleanScreen();
     lcdRenderHelpScreen();
@@ -127,6 +125,7 @@ void helpScreen() {
     while(!(readJoystick() & 0x01 << 3)) {}
 }
 
+//show end screen with the winner 
 void endScreen(uint32_t gameStats) {
     lcdCleanScreen();
     lcdRenderString(20, 1, "...and the winner is:");
