@@ -26,6 +26,25 @@
 #include <string.h>
 #include "lcd.h"
 
+void TIM2_IRQHandler(void) { // interrupt code
+    t1.flag = 1;
+/*
+    t1.centiseconds++;
+    if (t1.centiseconds/100 > 0) {
+        t1.seconds++;
+        t1.centiseconds %= 100;
+    }
+    if (t1.seconds/60 > 0) {
+        t1.minutes++;
+        t1.seconds %= 60;
+    }
+    if (t1.minutes/60 > 0) {
+        t1.hours++;
+        t1.minutes %= 60;
+   }
+*/
+    TIM2->SR &= ~0x0001; // Clear interrupt bit
+}
 
 void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialBricks_p){
     int i;
@@ -88,6 +107,7 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
 
     //timing variables
     int renderCount = 0;
+    int lcdRenderCount = 0;
     int physicsCount = 0;
     uint8_t i;
 
@@ -116,26 +136,31 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
         // Check if the timer have had an interrupt since last call
         if(t1.flag){
             physicsCount++;
+            lcdRenderCount++;
             renderCount++;
             t1.flag = 0;
         }
 
-        if(physicsCount > 10-(chosenSpeed*3)){
-            updatePhysics(balls, &activeBalls, &striker0, &striker1, &lives, &score, bricks, specialBricks);
-            physicsCount = 0;
-        }
 
-        if(renderCount > 50){//10000){
+        // Prioritezed single function update
+        if(lcdRenderCount > 50){
             //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
             lcdCleanScreen();
             lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, specialBricks, &lives, &score); //, specialBricks
             lcd_push_buffer();
-            bufferToAnsi();
             //updateRender();
-            renderCount = 0;
+            lcdRenderCount = 0;
+            if(renderCount > 200){
+                //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
+                bufferToAnsi();
+                //updateRender();
+                renderCount = 0;
+            }
+        }else if(physicsCount > 10-(chosenSpeed*3)){
+            updatePhysics(balls, &activeBalls, &striker0, &striker1, &lives, &score, bricks, specialBricks);
+            physicsCount = 0;
         }
-        // INSERT lives equal 0 gives return
-        // Uncomment when main is inserted!
+        // Termination of the game
         // finds if any brick is still active
         for(i=0; i<8; i++){
             if(bricks[i] != 0){

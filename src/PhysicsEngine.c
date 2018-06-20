@@ -67,12 +67,12 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
             if (ball_p->lastStriker) {
                 ball_p->angle = (ball_p->angle + 256)%512;
             }
-		
+
             // reflects angle in the x-axis if previous yv and new yv have different signs
             if (XOR2(ball_p->angle < 256, ball_p->yv > 0)){
                 ball_p->angle = (512 - ball_p->angle)%512;
             }
-		
+
             // determines new xpos and ypos - xv will be overwritten later
             reflect(&ball_p->xpos, 9 << 14, &ball_p->xv);
             ball_p->ypos = nextY;
@@ -96,7 +96,7 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
             ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle));
             ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle));
             ball_p->lastStriker = 0x00;
-		
+
 	    //return 1 to indicate that a position happened
             return 1;
         }
@@ -136,14 +136,14 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
             else if (nextY >= *striker1_p + (5 << 14) && nextY < *striker1_p + (6 << 14)){
                 ball_p->angle = (512 + ball_p->angle - (((512 + ball_p->angle - 128)%512)*2/3))%512;
             }
-		
+
             //adjust velocity vector according to new angle.
             ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle));
             ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle));
-	    
+
 	   		//set lastStriker to 1
             ball_p->lastStriker = 0x01;
-	    
+
 	    	//return 1 to indicate that a collision happened
             return 1;
         }
@@ -153,7 +153,7 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
 }
 
 
-uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBalls_p, 
+uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBalls_p,
 		uint16_t * score, uint32_t * bricks, uint32_t * specialBricks_p, uint32_t * striker0_p){
 
    /* About bit-shiting in this function:
@@ -276,7 +276,7 @@ uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBa
 
 //Adds a new ball.
 void newBall(ball_t * ball_p, uint8_t * activeBalls, uint32_t * striker0_p){
-	
+
 	//check if the ball array is full
     int i;
     if(*activeBalls == 0xFF){
@@ -293,11 +293,11 @@ void newBall(ball_t * ball_p, uint8_t * activeBalls, uint32_t * striker0_p){
     (ball_p+i)->xpos = 11 <<14;
     (ball_p+i)->ypos = *striker0_p + (3<<14);
     (ball_p+i)->angle = 257;
-    (ball_p+i)->v = 1 << 10;
+    (ball_p+i)->v = 1 << 11;
     (ball_p+i)->xv = FIX14MULT((ball_p+i)->v, fix14cos((ball_p+i)->angle));
     (ball_p+i)->yv = FIX14MULT((ball_p+i)->v, fix14sin((ball_p+i)->angle));
 
-    (ball_p+i)->lastStriker = 2;//0;
+    (ball_p+i)->lastStriker = 2;
 
 
     //Activate ball 0
@@ -314,12 +314,12 @@ void updateStrikers(uint32_t * striker0_p, uint32_t * striker1_p) {
 
 //Checks all collisions of all balls, updates accordingly.
 void updatePhysics(ball_t * ball_p, uint8_t * activeBalls_p, uint32_t * striker0_p,
-	uint32_t * striker1_p, uint8_t * lives_p, uint16_t * score_p, uint32_t * bricks_p, uint32_t * specialBricks_p){
+                   uint32_t * striker1_p, uint8_t * lives_p, uint16_t * score_p, uint32_t * bricks_p, uint32_t * specialBricks_p){
 
     uint8_t i;
 
     updateStrikers(striker0_p, striker1_p);
-	
+
 	//makes sure that only one collision is handled at a time
     for(i = 0; i<8; i++){
         if(!((*activeBalls_p) & (0x01<<i))){continue;}

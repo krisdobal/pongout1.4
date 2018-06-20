@@ -11,12 +11,13 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
 void startScreen();
 void helpScreen();
 void endScreen(uint32_t gameStats);
-
+void EXTI1_IRQHandler(void);
 
 int main(void) {
-  
+
   //Initializing hardware
   init_usb_uart(921600);
+  hideCursor();
   init_spi_lcd();
   initializeJoystick();
   initializeJoystickIRQ();
@@ -36,7 +37,7 @@ int main(void) {
   //Initializing game variables
   uint8_t level = 0;
   uint8_t speed = 0;
-  
+
   //Menu options
   char * mainOption0 = "change level";
   char * mainOption1 = "change speed";
@@ -58,7 +59,7 @@ int main(void) {
       //Show main menu
        uint8_t nextAction = 0;
       menu(mainOption0, mainOption1, mainOption2, mainOption3, &nextAction);
-      
+
       //goto the wished option
       switch (nextAction) {
           case 0 :
@@ -95,7 +96,7 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
     lcdRenderArrow(*option_p);
     lcd_push_buffer();
     bufferToAnsi();
-    
+
     //react to joystick movement
     while(stillDeciding) {
         joystick = readJoystick();
@@ -135,7 +136,7 @@ void helpScreen() {
     while(!(readJoystick() & 0x01 << 3)) {}
 }
 
-//show end screen with the winner 
+//show end screen with the winner
 void endScreen(uint32_t gameStats) {
     lcdCleanScreen();
     lcdRenderString(20, 1, "...and the winner is:");
@@ -157,3 +158,7 @@ void endScreen(uint32_t gameStats) {
 
 }
 
+void EXTI1_IRQHandler(void) {
+    while (readJoystick() & (0x01 << 2)) {}
+    EXTI->PR |= EXTI_PR_PR1;
+}

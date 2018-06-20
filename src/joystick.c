@@ -115,7 +115,3 @@ uint8_t readJoystick(){
     return output;
 }
 
-void EXTI1_IRQHandler(void) {
-    while (readJoystick() & (0x01 << 2)) {}
-    EXTI->PR |= EXTI_PR_PR1;
-}
