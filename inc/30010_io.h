@@ -23,7 +23,7 @@ void init_usb_uart(uint32_t baud);
 /*****************************/
 void init_spi_lcd();
 void lcd_transmit_byte(uint8_t data);
-void lcd_push_buffer(uint8_t* buffer);
+void lcd_push_buffer();
 void lcd_reset();
 
 #endif /* _30010_IO_H_ */
