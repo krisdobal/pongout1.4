@@ -88,6 +88,7 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
 
     //timing variables
     int renderCount = 0;
+    int lcdRenderCount = 0;
     int physicsCount = 0;
     uint8_t i;
 
@@ -116,23 +117,29 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
         // Check if the timer have had an interrupt since last call
         if(t1.flag){
             physicsCount++;
+            lcdRenderCount++;
             renderCount++;
             t1.flag = 0;
         }
 
-        if(physicsCount > 10-(chosenSpeed*3)){
-            updatePhysics(balls, &activeBalls, &striker0, &striker1, &lives, &score, bricks, specialBricks);
-            physicsCount = 0;
-        }
 
-        if(renderCount > 50){//10000){
+        // Prioritezed single function update
+        if(lcdRenderCount > 50){
             //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
             lcdCleanScreen();
             lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, specialBricks, &lives, &score); //, specialBricks
             lcd_push_buffer();
-            bufferToAnsi();
             //updateRender();
-            renderCount = 0;
+            lcdRenderCount = 0;
+            if(renderCount > 200){
+                //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
+                bufferToAnsi();
+                //updateRender();
+                renderCount = 0;
+            }
+        }else if(physicsCount > 10-(chosenSpeed*3)){
+            updatePhysics(balls, &activeBalls, &striker0, &striker1, &lives, &score, bricks, specialBricks);
+            physicsCount = 0;
         }
         // INSERT lives equal 0 gives return
         // Uncomment when main is inserted!
