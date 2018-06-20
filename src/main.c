@@ -23,7 +23,17 @@ int main(void) {
   initializeJoystickIRQ();
 
   //Show fancy start screen
-
+    int i;
+    for(i = 0; i<512; i++){
+        buffer[i] = PongOut_title[i];
+    }
+    lcd_push_buffer();
+    bufferToAnsi();
+    while(1){
+        if (readJoystick() & (0x01 << 3)) {
+            break;
+        }
+    }
 
 
   //Initializing game variables
@@ -130,17 +140,20 @@ void helpScreen() {
 
 //show end screen with the winner
 void endScreen(uint32_t gameStats) {
+    int i;
     lcdCleanScreen();
-    lcdRenderString(20, 1, "...and the winner is:");
     if (gameStats & 0x02) {
-        buffer = win1;
+        for(i = 0; i<512; i++){
+            buffer[i] = win1[i];
+        }
         //lcdRenderString(20, 2, "Player 1");
     }
     else {
-        buffer = win0;
-        lcdRenderString(25, 2, "Player 0");
+        for(i = 0; i<512; i++){
+            buffer[i] = win0[i];
+        }
     }
-    lcd_push_buffer(buffer);
+    lcd_push_buffer();
     bufferToAnsi();
     while(1){
         if (readJoystick() & (0x01 << 3)) {
@@ -151,8 +164,13 @@ void endScreen(uint32_t gameStats) {
 }
 
 void EXTI1_IRQHandler(void) {
+    int i;
+    for(i = 0; i<512; i++){
+        buffer[i] = BossScreen[i];
+    }
+    lcd_push_buffer();
+    bufferToAnsi();
     while (readJoystick() & (0x01 << 2)) {
-
     }
     EXTI->PR |= EXTI_PR_PR1;
 }
