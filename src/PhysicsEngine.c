@@ -93,8 +93,8 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
                 ball_p->angle = (ball_p->angle + (((512 + 128 - ball_p->angle)%512)*2/3))%512;
             }
             //adjust velocity vector according to new angle.
-            ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle)); //other options: fix14cos(ball_p->angle);// reduced vector to 1/2^5
-            ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle)); //other less good options fix14sin(ball_p->angle);// reduced vector to 1/2^5
+            ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle));
+            ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle));
             ball_p->lastStriker = 0x00;
 		
 	    //return 1 to indicate that a position happened
@@ -153,7 +153,8 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
 }
 
 
-uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBalls_p, uint16_t * score, uint32_t * bricks, uint32_t * specialBricks_p, uint32_t * striker0_p){
+uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBalls_p, 
+		uint16_t * score, uint32_t * bricks, uint32_t * specialBricks_p, uint32_t * striker0_p){
 
    /* About bit-shiting in this function:
     *   >>14 - Conversion from 18:14 to int.
