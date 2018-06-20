@@ -143,19 +143,22 @@ void helpScreen() {
 void endScreen(uint32_t gameStats) {
     int i;
     lcdCleanScreen();
+
+    //If player 1 has won
     if (gameStats & 0x02) {
         for(i = 0; i<512; i++){
+            //Set graphics buffer to winScreen
             buffer[i] = win1[i];
         }
-        //lcdRenderString(20, 2, "Player 1");
-    }
-    else {
+    } else { //Player 0 has won
         for(i = 0; i<512; i++){
             buffer[i] = win0[i];
         }
     }
     lcd_push_buffer();
     bufferToAnsi();
+
+    // Wait for the user to interact
     while(1){
         if (readJoystick() & (0x01 << 3)) {
             return;

@@ -112,9 +112,6 @@ int32_t fix14sin(uint16_t a) {
 // 360° = 512
     a %= 512;
     int32_t b = SIN[a];
-//    if((SIN[a] & 0x8000) !=0){
-//        b += 0xFFFF0000;
-//    }
     return b;
 }
 
@@ -124,20 +121,3 @@ int32_t fix14cos(uint16_t a) {
     return fix14sin(a);
 }
 
-/*
-void initVector(struct vector_t *v_p) {
-    v_p->x = 10;
-    v_p->y = 20;
-}
-
-// Angle a in 512 step.
-void rotateVector(struct vector_t *v_p, int a) {
-    v_p->x = v_p->x * cos(a) - v_p->y * sin(a);
-    v_p->y = v_p->x * sin(a) + v_p->y * cos(a);
-}
-
-
-void main() {
-    printFix(expand(cos(923)));
-}
-*/

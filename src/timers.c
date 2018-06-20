@@ -1,16 +1,3 @@
-/*
-**
-**                           timers.c
-**
-**
-**********************************************************************/
-/*
-   Last committed:     $Revision: 08/06/2018 $
-   Last changed by:    $Author: Kristoffer $
-   Last changed date:  $Date: 15:25 08/06/2018 $
-   ID:                 $Id: 1 $
-
-**********************************************************************/
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" // Input/output library for this course
 #include "timers.h"
@@ -43,7 +30,6 @@ void setSplitTimeFromTimer1(funTime_t *split){
     split->seconds = t1.seconds;
     split->minutes = t1.minutes;
     split->hours = t1.hours;
-
 }
 
 

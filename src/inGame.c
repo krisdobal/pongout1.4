@@ -1,16 +1,4 @@
-/*
-**
-**                           Main.c
-**
-**
-**********************************************************************/
-/*
-   Last committed:     $Revision: 00 $
-   Last changed by:    $Author: $
-   Last changed date:  $Date:  $
-   ID:                 $Id:  $
 
-**********************************************************************/
 #include "stm32f30x_conf.h"
 #include "30010_io.h"
 #include "inGame.h"
@@ -64,21 +52,6 @@ void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialB
 int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
     startTimer1(1500);
     initPots();
-    /*
-    //Initializing hardware setup
-                                        // To be put in main
-    init_usb_uart(115200);
-    startTimer1(1500);
-    initPots();
-    initializeJoystick();
-    initializeJoystickIRQ();
-    init_spi_lcd();
-    //initializeLed();
-
-    //Variables to be referenced from main
-    uint8_t chosenLevel = 1;
-    uint8_t chosenSpeed = 3; // value from upper main from 0, to 3 where 3 is fastest'
-    */
 
     //Initialize game variables
     // 18.14 values
@@ -101,29 +74,18 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
     int physicsCount = 0;
     uint8_t i;
 
-
-    // Initialization
-
     // striker initial position
     updateStrikers(&striker0, &striker1);
     loadLevel(&chosenLevel, bricks, specialBricks);//0: default
 
+    //Initiate the first ball
     newBall(&balls[0],&activeBalls,&striker0);
-    //Initiate ball 1
 
-
-    // Rendering initial posittions
     hideCursor();
-    //renderGame(balls, bricks, striker0, striker1);
     lcdCleanScreen();
 
-    //memset(buffer,0xAA,512);
-    //lcd_push_buffer(buffer);
-
-    while(1)
-    {
-
-        // Check if the timer have had an interrupt since last call
+    while(1) {
+        // Check if the timer has had an interrupt since last call
         if(t1.flag){
             physicsCount++;
             lcdRenderCount++;
@@ -131,19 +93,14 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
             t1.flag = 0;
         }
 
-
         // Prioritezed single function update
         if(lcdRenderCount > 50){
-            //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
             lcdCleanScreen();
             lcdRenderGame(balls, &activeBalls, &striker0, &striker1, bricks, specialBricks, &lives, &score); //, specialBricks
             lcd_push_buffer();
-            //updateRender();
             lcdRenderCount = 0;
             if(renderCount > 200){
-                //renderGame(balls, bricks, striker0, striker1);// rendering for PuTTY
                 bufferToAnsi();
-                //updateRender();
                 renderCount = 0;
             }
         }else if(physicsCount > 10-(chosenSpeed*3)){
@@ -151,7 +108,7 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
             physicsCount = 0;
         }
         // Termination of the game
-        // finds if any brick is still active
+        // checks if any brick are still active, continues if not
         for(i=0; i<8; i++){
             if(bricks[i] != 0){
                 break;
@@ -174,10 +131,6 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
             gameStats += (0x0000 << 1); // Player 0 has won
             return gameStats;
         }
-
-
-
-
     }
 }
 
