@@ -13,12 +13,11 @@
 **********************************************************************/
 #include "stm32f30x_conf.h"
 #include "30010_io.h"
-
+#include "inGame.h"
 #include "lookup.h"
 #include "PhysicsEngine.h"
 #include "ansi.h"
 #include "joystick.h"
-#include "led.h"
 #include "potmeter.h"
 #include "timers.h"
 #include "levels.h"
@@ -28,21 +27,6 @@
 
 void TIM2_IRQHandler(void) { // interrupt code
     t1.flag = 1;
-/*
-    t1.centiseconds++;
-    if (t1.centiseconds/100 > 0) {
-        t1.seconds++;
-        t1.centiseconds %= 100;
-    }
-    if (t1.seconds/60 > 0) {
-        t1.minutes++;
-        t1.seconds %= 60;
-    }
-    if (t1.minutes/60 > 0) {
-        t1.hours++;
-        t1.minutes %= 60;
-   }
-*/
     TIM2->SR &= ~0x0001; // Clear interrupt bit
 }
 
