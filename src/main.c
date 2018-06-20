@@ -5,6 +5,7 @@
 #include "ansi.h"
 #include "joystick.h"
 #include "lcd.h"
+#include "splash.h"
 
 void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p);
 void startScreen();
@@ -22,7 +23,16 @@ int main(void) {
   initializeJoystickIRQ();
 
   //Show fancy start screen
-  //startScreen();
+    buffer = PongOut_title;
+    lcd_push_buffer();
+    bufferToAnsi();
+    while(1){
+        if (readJoystick() & (0x01 << 3)) {
+            break;
+        }
+    }
+
+
 
   //Initializing game variables
   uint8_t level = 0;
@@ -131,9 +141,11 @@ void endScreen(uint32_t gameStats) {
     lcdCleanScreen();
     lcdRenderString(20, 1, "...and the winner is:");
     if (gameStats & 0x02) {
-        lcdRenderString(20, 2, "Player 1");
+        buffer = win1;
+        //lcdRenderString(20, 2, "Player 1");
     }
     else {
+        buffer = win0;
         lcdRenderString(25, 2, "Player 0");
     }
     lcd_push_buffer(buffer);
