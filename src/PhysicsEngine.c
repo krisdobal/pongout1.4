@@ -6,8 +6,8 @@
 
 // Uses 18.14 fixed-point integers
 
-// general one-dimensional reflect function taking moving object position and
-// velocity plus statical object position.
+// general one-dimensional reflect function. taking moving object position and
+// velocity plus statical object position. Does NOT update the angle.
 void reflect(int32_t * pos_p, int wall, int32_t * v_p){
     //This function assumes good input.
     //All checks must be made before calling it.
@@ -15,6 +15,7 @@ void reflect(int32_t * pos_p, int wall, int32_t * v_p){
     *v_p *= -1;
 }
 
+// updates the ball struct to it's next position
 void moveBall(ball_t * ball_p){
     ball_p->xpos += ball_p->xv;
     ball_p->ypos += ball_p->yv;
@@ -33,7 +34,8 @@ uint8_t wallCollision(ball_t * ball_p) {
     }
 }
 
-// TODONE: Delete ball from ball-array
+/*Checks if the ball will go into one of the endzones. If yes, subtracts a life from the player
+and removes the ball from the array of balls*/
 uint8_t endCollision(ball_t * ball_p, uint8_t * lives_p, uint8_t * activeBalls_p, uint8_t ballnum) {
     if (ball_p->xpos + ball_p->xv < (7 << 14)) {
         *lives_p-=0x01;
@@ -48,6 +50,7 @@ uint8_t endCollision(ball_t * ball_p, uint8_t * lives_p, uint8_t * activeBalls_p
     }
 }
 
+/*Checks if the ball hits one of the strikers. If yes, updates ball accordingly*/
 uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * striker1_p) {
     int nextX = ball_p->xpos + ball_p->xv;
     int nextY = ball_p->ypos + ball_p->yv;
@@ -64,20 +67,13 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
             if (ball_p->lastStriker) {
                 ball_p->angle = (ball_p->angle + 256)%512;
             }
+		
             // reflects angle in the x-axis if previous yv and new yv have different signs
             if (XOR2(ball_p->angle < 256, ball_p->yv > 0)){
                 ball_p->angle = (512 - ball_p->angle)%512;
             }
-
-/*
-            if (XOR3(ball_p->lastStriker, ball_p -> angle > 127 && ball_p -> angle < 512, ball_p->yv > 0)){
-                ball_p->angle = 512 - ball_p->angle;
-            }
-            if (ball_p->lastStriker) {
-                ball_p->angle += 128;
-            }
-*/
-            // determins new xpos and ypos - xv will be overwritten later
+		
+            // determines new xpos and ypos - xv will be overwritten later
             reflect(&ball_p->xpos, 9 << 14, &ball_p->xv);
             ball_p->ypos = nextY;
 
@@ -85,28 +81,23 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
 
             if (nextY < (* striker0_p) + (1 << 14)){
                 ball_p->angle = (512 + ball_p->angle -(((512 + ball_p->angle - 384)%512)*2/3))%512;
- //               ball_p->angle += ((128 - ball_p->angle) >> 1);
             }
             else if (nextY < (* striker0_p) + (2 << 14)){
                 ball_p->angle = (512 + ball_p->angle -(((512 + ball_p->angle - 384)%512)/3))%512;
-//                ball_p->angle += (127 - ball_p->angle) >> 2;
             }
             else if (nextY < (* striker0_p) + (4 << 14)){}
             else if (nextY < (* striker0_p) + (5 << 14)){
                 ball_p->angle = (ball_p->angle + (((512 + 128 - ball_p->angle)%512)/3))%512;
             }
-            else { // if (nextY >= (* striker0) + (5 << 14) && nextY < * striker0 + (6 << 14)) {
+            else {
                 ball_p->angle = (ball_p->angle + (((512 + 128 - ball_p->angle)%512)*2/3))%512;
             }
             //adjust velocity vector according to new angle.
-            // uint32_t fixcos = fix14cos(ball_p->angle);
             ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle)); //other options: fix14cos(ball_p->angle);// reduced vector to 1/2^5
             ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle)); //other less good options fix14sin(ball_p->angle);// reduced vector to 1/2^5
             ball_p->lastStriker = 0x00;
-            /*
-            free(&nextX);
-            free(&nextY);
-            */
+		
+	    //return 1 to indicate that a position happened
             return 1;
         }
     }
@@ -145,22 +136,19 @@ uint8_t strikerCollision(ball_t * ball_p, uint32_t * striker0_p, uint32_t * stri
             else if (nextY >= *striker1_p + (5 << 14) && nextY < *striker1_p + (6 << 14)){
                 ball_p->angle = (512 + ball_p->angle - (((512 + ball_p->angle - 128)%512)*2/3))%512;
             }
+		
             //adjust velocity vector according to new angle.
-            ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle)); //other options: fix14cos(ball_p->angle);// reduced vector to 1/2^5
-            ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle)); //other less good options fix14sin(ball_p->angle);// reduced vector to 1/2^5
-
+            ball_p->xv = FIX14MULT(ball_p->v, fix14cos(ball_p->angle));
+            ball_p->yv = FIX14MULT(ball_p->v, fix14sin(ball_p->angle));
+	    
+	   		//set lastStriker to 1
             ball_p->lastStriker = 0x01;
-            /*
-            free(&nextX);
-            free(&nextY);
-            */
+	    
+	    	//return 1 to indicate that a collision happened
             return 1;
         }
     }
-    /*
-    free(&nextX);
-    free(&nextY);
-    */
+    //return 0 to indicate that no collisions happened
     return 0;
 }
 
