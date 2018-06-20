@@ -141,8 +141,7 @@ int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
             updatePhysics(balls, &activeBalls, &striker0, &striker1, &lives, &score, bricks, specialBricks);
             physicsCount = 0;
         }
-        // INSERT lives equal 0 gives return
-        // Uncomment when main is inserted!
+        // Termination of the game
         // finds if any brick is still active
         for(i=0; i<8; i++){
             if(bricks[i] != 0){
