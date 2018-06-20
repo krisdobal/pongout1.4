@@ -23,14 +23,6 @@ int main(void) {
   initializeJoystickIRQ();
 
   //Show fancy start screen
-    buffer = PongOut_title;
-    lcd_push_buffer();
-    bufferToAnsi();
-    while(1){
-        if (readJoystick() & (0x01 << 3)) {
-            break;
-        }
-    }
 
 
 
@@ -159,6 +151,8 @@ void endScreen(uint32_t gameStats) {
 }
 
 void EXTI1_IRQHandler(void) {
-    while (readJoystick() & (0x01 << 2)) {}
+    while (readJoystick() & (0x01 << 2)) {
+
+    }
     EXTI->PR |= EXTI_PR_PR1;
 }

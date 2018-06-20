@@ -62,6 +62,12 @@ void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialB
                 specialBricks_p[i] = special2[i];
             }
             break;
+        case 3 :
+            for(i=0;i<8;i++){
+                bricks_p[i] = level3[i];
+                specialBricks_p[i] = special3[i];
+            }
+            break;
         default :
             for(i=0;i<8;i++){
                 bricks_p[i] = defaultLevel[i];
