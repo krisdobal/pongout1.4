@@ -7,10 +7,10 @@
 //#include "charset.h"
 //#include <string.h>
 #include "lcd.h"
-#include "lookup.h"
-#include "led.h"
-#include "potmeter.h"
-#include "timers.h"
+//#include "lookup.h"
+//#include "led.h"
+//#include "potmeter.h"
+//#include "timers.h"
 //#include "levels.h"
 
 
@@ -23,17 +23,14 @@ void endScreen(uint32_t gameStats);
 
 
 int main(void) {
-
   //Initializing hardware
-  init_usb_uart(115200);
-  startTimer1(1500);
-  initPots();
+  init_usb_uart(921600);
   init_spi_lcd();
   initializeJoystick();
   initializeJoystickIRQ();
 
   //Show fancy start screen
-  startScreen();
+  //startScreen();
 
   //Initializing game variables
   uint8_t level = 0;
@@ -89,25 +86,31 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
     lcdRenderString(0, 1, opt1);
     lcdRenderString(0, 2, opt2);
     lcdRenderString(0, 3, opt3);
+    lcdRenderArrow(*option_p);
+    lcd_push_buffer();
+    bufferToAnsi();
 
     while(stillDeciding) {
-
-        lcd_push_buffer(buffer);
         joystick = readJoystick();
         if (!pressed) {
             if (joystick & 0x01 << 1) {
                 *option_p = (*option_p + 1) % 4;
                 pressed = 1;
+                lcdRenderArrow(*option_p);
+                lcd_push_buffer();
+                bufferToAnsi();
             }
             else if(joystick & 0x01 << 0) {
                 *option_p = (*option_p + 3) % 4;
                 pressed = 1;
+                lcdRenderArrow(*option_p);
+                lcd_push_buffer();
+                bufferToAnsi();
             }
             else if(joystick & (0x01 << 3)) {
                 stillDeciding = 0;
                 pressed = 1;
             }
-            lcdRenderArrow(*option_p);
         }
         else if (!(joystick & 0x0F)) {
             pressed = 0;
@@ -118,6 +121,8 @@ void menu(char * opt0, char * opt1, char * opt2, char * opt3, uint8_t * option_p
 void helpScreen() {
     lcdCleanScreen();
     lcdRenderHelpScreen();
+    lcd_push_buffer();
+    bufferToAnsi();
     while((readJoystick() & 0x01 << 3)) {}
     while(!(readJoystick() & 0x01 << 3)) {}
 }
@@ -132,6 +137,7 @@ void endScreen(uint32_t gameStats) {
         lcdRenderString(25, 2, "Player 0");
     }
     lcd_push_buffer(buffer);
+    bufferToAnsi();
     while(1){
         if (readJoystick() & (0x01 << 3)) {
             return;

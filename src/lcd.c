@@ -3,7 +3,8 @@
 #include "stm32f30x_conf.h"
 #include "PhysicsEngine.h"
 #include "30010_io.h"
-#include "inGame.h"
+//#include "inGame.h"
+#include "buffer.h"
 #include <string.h>
 
 void lcdRenderChar(int slice, uint8_t line, uint8_t c){//char c, uint8_t * buffer_p){
@@ -35,7 +36,6 @@ void lcdRenderString(int slice, uint8_t line, char * string_p){
 
 void lcdCleanScreen(){
     memset(buffer, 0x00, 512);
-    lcd_push_buffer(buffer);
 }
 
 void lcdRenderBricks(uint32_t * bricks_p, uint32_t * specialBricks_p){
@@ -220,7 +220,6 @@ void lcdRenderGame(ball_t * balls_p, uint8_t * activeBalls_p, uint32_t * striker
     renderDecorations(lives_p, score_p); //TODO : scores and lives
     lcdRenderStrikers(striker0_p, striker1_p);
     lcdRenderBalls(balls_p, activeBalls_p);
-    lcd_push_buffer(buffer);
 }
 
 void lcdRenderHelpScreen() {
@@ -229,6 +228,5 @@ void lcdRenderHelpScreen() {
     lcdRenderString(1, 2, "player with the most    ");
     lcdRenderString(1, 3, "points wins.       EXIT ");
     lcdRenderArrow(3);
-    lcd_push_buffer(buffer);
 }
 

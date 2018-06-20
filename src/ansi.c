@@ -2,6 +2,7 @@
 
 #include "stm32f30x_conf.h" // STM32 config
 #include "PhysicsEngine.h"
+#include "buffer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -288,19 +289,19 @@ void renderStrikers(int striker0, int striker1){
     }
 }
 
-void bufferToAnsi(uint8_t * buffer_p){
+void bufferToAnsi(){
     uint8_t c = 0xDB; //Filled square char.
-    uint8_t line[128];
-
+    char scrstr[4128];
     int i, j;
+    memset(scrstr, 0xFF, 4128);
     for(i = 0; i<32; i++){
-        memset(line, 0x00, 128);
         for(j = 0; j<128; j++){
-            if(buffer_p[j + (i>>3)]) line[j]=c;
+            if(buffer[j + ((i >> 3) << 7)] & (0x01 << (i%8))) scrstr[j+i*129]=c;
         }
-        gotoxy(0,i);
-        printf("%s",line);
+        scrstr[(i)*129+128] = 0x0A;
     }
+    gotoxy(0,0);
+    printf("%s",scrstr);
 }
 
 // Renders PongOut game
