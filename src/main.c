@@ -2,6 +2,7 @@
 #include "30010_io.h"
 #include "PhysicsEngine.h"
 #include "inGame.h"
+#include "buffer.h"
 #include "ansi.h"
 #include "joystick.h"
 #include "lcd.h"

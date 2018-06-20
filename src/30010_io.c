@@ -1,5 +1,5 @@
 #include "30010_io.h"
-#include "inGame.h"
+#include "buffer.h"
 
 /****************************/
 /*** USB Serial Functions ***/
