@@ -57,8 +57,8 @@ void lcdRenderBricks(uint32_t * bricks_p, uint32_t * specialBricks_p){
             uint8_t brickDataL = 0x00;
             uint8_t brickDataR = 0x00;
 
-            if(bricks_p[(i<<1)]   & (0x00000001<<j)) {
-                if(specialBricks_p[(i<<1)]) {
+            if(bricks_p[(i<<1)] & (0x00000001<<j)) {
+                if(specialBricks_p[(i<<1)] & (0x00000001<<j)){
                     brickDataL += 0x0A;
                     brickDataR += 0x05;
                 } else {
@@ -67,7 +67,7 @@ void lcdRenderBricks(uint32_t * bricks_p, uint32_t * specialBricks_p){
                 }
             }
             if(bricks_p[(i<<1)+1] & (0x00000001<<j)) {
-                if(specialBricks_p[(i<<1)]) {
+                if(specialBricks_p[(i<<1)+1] & (0x00000001<<j)){
                     brickDataL += 0xA0;
                     brickDataR += 0x50;
                 } else {
