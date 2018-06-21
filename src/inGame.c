@@ -64,21 +64,6 @@ void loadLevel(uint8_t * levelSelect_p, uint32_t * bricks_p, uint32_t * specialB
 int startGame(uint8_t chosenLevel, uint8_t chosenSpeed){
     startTimer1(1500);
     initPots();
-    /*
-    //Initializing hardware setup
-                                        // To be put in main
-    init_usb_uart(115200);
-    startTimer1(1500);
-    initPots();
-    initializeJoystick();
-    initializeJoystickIRQ();
-    init_spi_lcd();
-    //initializeLed();
-
-    //Variables to be referenced from main
-    uint8_t chosenLevel = 1;
-    uint8_t chosenSpeed = 3; // value from upper main from 0, to 3 where 3 is fastest'
-    */
 
     //Initialize game variables
     // 18.14 values
