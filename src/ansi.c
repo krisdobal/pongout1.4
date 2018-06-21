@@ -6,6 +6,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+void gotoxy(int x, int y) {
+    //printf("%c[H",ESC);
+    printf("%c[%d;%df", ESC, y, x);
+}
+
+//hide cursor
+void hideCursor() {
+    printf("%c[?25l",ESC);
+}
+
+
 void bufferToAnsi(){
     uint8_t c = 0xDB; //Filled square char.
 
