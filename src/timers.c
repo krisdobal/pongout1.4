@@ -18,19 +18,3 @@ void stopTimer1(void) { // Pauses the timer
     TIM2->CR1 = 0x00;
 }
 
-void resetTimer1(void){
-    t1.centiseconds = 0;
-    t1.seconds = 0;
-    t1.minutes = 0;
-    t1.hours = 0;
-}
-
-void setSplitTimeFromTimer1(funTime_t *split){
-    split->centiseconds = t1.centiseconds;
-    split->seconds = t1.seconds;
-    split->minutes = t1.minutes;
-    split->hours = t1.hours;
-}
-
-
-
