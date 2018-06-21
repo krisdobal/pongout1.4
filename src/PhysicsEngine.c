@@ -232,8 +232,6 @@ uint8_t brickCollision(ball_t * ball_p, ball_t * ballArray_p, uint8_t * activeBa
         }
     } // End x
 
-
-
     // Y
 
     //Are we crossing a multiple of 4?

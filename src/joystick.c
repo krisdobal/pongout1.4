@@ -1,16 +1,3 @@
-/*
-**
-**                           joystick.c
-**
-**
-**********************************************************************/
-/*
-   Last committed:     $Revision: 06/06/2018 $
-   Last changed by:    $Author: Kristoffer $
-   Last changed date:  $Date: 11:20 06/06/2018 $
-   ID:                 $Id: 1 $
-
-**********************************************************************/
 #include "stm32f30x_conf.h"
 #include "30010_io.h"
 

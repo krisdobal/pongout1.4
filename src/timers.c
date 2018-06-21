@@ -1,16 +1,3 @@
-/*
-**
-**                           timers.c
-**
-**
-**********************************************************************/
-/*
-   Last committed:     $Revision: 08/06/2018 $
-   Last changed by:    $Author: Kristoffer $
-   Last changed date:  $Date: 15:25 08/06/2018 $
-   ID:                 $Id: 1 $
-
-**********************************************************************/
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" // Input/output library for this course
 #include "timers.h"
@@ -30,5 +17,4 @@ void startTimer1(int f) { // Initiation and starting the timer,  f - Frequency
 void stopTimer1(void) { // Pauses the timer
     TIM2->CR1 = 0x00;
 }
-
 

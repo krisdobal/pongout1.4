@@ -3,17 +3,16 @@
 #include "stm32f30x_conf.h"
 #include "PhysicsEngine.h"
 #include "30010_io.h"
-//#include "inGame.h"
 #include "buffer.h"
 #include <string.h>
 
-void lcdRenderChar(int slice, uint8_t line, uint8_t c){//char c, uint8_t * buffer_p){
+void lcdRenderChar(int slice, uint8_t line, uint8_t c){
     for(int i=0; i<5; i++){
         buffer[slice+(128*line)+i] = character_data[c][i];
     }
 }
 
-void lcdRenderArrow(uint8_t line){//char c, uint8_t * buffer_p){
+void lcdRenderArrow(uint8_t line){
     for(int i=0; i<4; i++){
         if(i == line){
             lcdRenderChar(128-5,i,0x1E);
@@ -39,7 +38,7 @@ void lcdCleanScreen(){
 }
 
 void lcdRenderBricks(uint32_t * bricks_p, uint32_t * specialBricks_p){
-    //This funciton renders all the bricks.
+    // This funciton renders all the bricks.
     // they're rendered two bricks at a time, on top of each other.
 
     //Brickdata explanation:
@@ -137,18 +136,8 @@ void renderDecorations(uint8_t * lives_p, uint16_t * score_p){
 
     }
     //Lives
-    lcdRenderChar(1,3,lives0Char); // Can be implemented without the switch as 0x6A + (*lives_p & 0x0F)
+    lcdRenderChar(1,3,lives0Char);
     lcdRenderChar(122,3,lives1Char);
-
-/*
-    //Setting the char for score
-    uint8_t score0Onechar, score0TenChar, score1Onechar, score1TenChar;
-    switch (*score_p & 0x000F){
-        case 0x0000 :
-            score0Onechar = ;
-        break;
-    }
-*/
 
     //Scores
     lcdRenderChar(1,0,0x60 + ((* score_p & 0x00FF)/0x000A));
